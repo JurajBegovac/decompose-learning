@@ -1,3 +1,4 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
@@ -35,6 +36,9 @@ kotlin {
             dependencies {
                 api(libs.decompose.decompose)
                 api(libs.essenty.lifecycle)
+                api(libs.koin.core)
+                api(libs.kotlinx.coroutines.core)
+                api(libs.napier)
             }
         }
         val commonTest by getting {

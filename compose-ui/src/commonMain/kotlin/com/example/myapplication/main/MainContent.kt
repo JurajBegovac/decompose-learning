@@ -7,8 +7,10 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.example.myapplication.shared.main.MainComponent
 
 @Composable
@@ -16,6 +18,8 @@ internal fun MainContent(
     component: MainComponent,
     modifier: Modifier = Modifier,
 ) {
+    val mainState by component.model.subscribeAsState()
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -28,8 +32,11 @@ internal fun MainContent(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center,
         ) {
-            Button(onClick = component::onShowWelcomeClicked) {
-                Text(text = "Show Welcome screen")
+            Button(
+                enabled = mainState.buttonEnabled,
+                onClick = component::onShowWelcomeClicked
+            ) {
+                Text(text = mainState.buttonText)
             }
         }
     }

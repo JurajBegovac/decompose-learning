@@ -2,7 +2,7 @@
 
 project = "1.0.0"
 kotlin = "1.9.20"
-agp = "8.0.2"
+agp = "8.1.4"
 jvmTarget = "11"
 
 android-minSdk = "24"
@@ -11,10 +11,16 @@ android-targetSdk = "34"
 
 compose-jetbrains = "1.5.10"
 
-androidx-activityCompose = "1.8.0"
+androidx-activityCompose = "1.8.1"
 
-decompose = "2.1.4-compose-experimental"
-essenty = "1.2.0"
+decompose = "2.2.0-compose-experimental-alpha05"
+essenty = "1.3.0-alpha04"
+
+koin = "3.5.0"
+
+coroutines = "1.7.3"
+
+napier = "2.6.1"
 
 [plugins]
 
@@ -33,3 +39,8 @@ decompose-decompose = { group = "com.arkivanov.decompose", name = "decompose", v
 decompose-extensionsComposeJetbrains = { group = "com.arkivanov.decompose", name = "extensions-compose-jetbrains", version.ref = "decompose" }
 
 essenty-lifecycle = { group = "com.arkivanov.essenty", name = "lifecycle", version.ref = "essenty" }
+
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }

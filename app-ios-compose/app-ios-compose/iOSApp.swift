@@ -6,6 +6,11 @@ struct iOSApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self)
     var appDelegate: AppDelegate
 
+    init() {
+        HelperKt.doInitNapier()
+        HelperKt.doInitKoin()
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView(root: appDelegate.root)

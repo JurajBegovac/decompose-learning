@@ -1,3 +1,4 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.android.application)
@@ -43,4 +44,5 @@ dependencies {
     implementation(project(":compose-ui"))
     implementation(libs.androidx.activity.activityCompose)
     implementation(compose.foundation)
+    implementation(libs.koin.android)
 }
