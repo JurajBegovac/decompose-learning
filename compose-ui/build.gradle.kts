@@ -8,8 +8,6 @@ plugins {
 kotlin {
     applyDefaultHierarchyTemplate()
 
-    jvm()
-
     androidTarget {
         compilations.all {
             kotlinOptions {
