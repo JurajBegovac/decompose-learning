@@ -106,3 +106,11 @@ fun <State : Any> InstanceKeeper.getOrCreateCoroutineScopeAndState(
 ): Value<State> {
     return getOrCreate { CoroutineScopeHolder(scopeProvider, initialValue, block) }.state
 }
+
+class MutableStateScopeHolder<State : Any>(initialValue: State) : InstanceKeeper.Instance {
+    val mutableState: MutableValue<State> = MutableValue(initialValue)
+}
+
+fun <State : Any> InstanceKeeper.getOrCreateMutableState(initialValue: State): MutableValue<State> {
+    return getOrCreate { MutableStateScopeHolder(initialValue) }.mutableState
+}

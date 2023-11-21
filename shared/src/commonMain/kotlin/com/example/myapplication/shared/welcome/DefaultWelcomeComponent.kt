@@ -1,9 +1,9 @@
 package com.example.myapplication.shared.welcome
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
+import com.example.myapplication.shared.getOrCreateMutableState
 import com.example.myapplication.shared.getPlatformName
 
 class DefaultWelcomeComponent(
@@ -11,7 +11,7 @@ class DefaultWelcomeComponent(
     private val onFinished: () -> Unit,
 ) : ComponentContext by componentContext, WelcomeComponent {
 
-    private val mutableState = MutableValue(WelcomeComponent.State())
+    private val mutableState = instanceKeeper.getOrCreateMutableState(WelcomeComponent.State())
 
     override val state: Value<WelcomeComponent.State> = mutableState
 
