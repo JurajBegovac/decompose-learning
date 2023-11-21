@@ -36,4 +36,9 @@ abstract class BaseScreenComponent<State : Any>(
             dataFlow.collectLatest { data -> _state.update { currentState -> stateReducer(currentState, data) } }
         }
     }
+
+    // Use it rarely
+    protected fun updateStateBasic(stateReducer: (State) -> State) {
+        _state.update(stateReducer)
+    }
 }
