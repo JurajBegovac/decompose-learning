@@ -1,25 +1,52 @@
 package com.example.myapplication.shared.welcome
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.Value
-import com.arkivanov.decompose.value.update
-import com.example.myapplication.shared.getOrCreateMutableState
 import com.example.myapplication.shared.getPlatformName
+import io.github.aakira.napier.Napier
+import kotlinx.coroutines.flow.Flow
 
 class DefaultWelcomeComponent(
     componentContext: ComponentContext,
     private val onFinished: () -> Unit,
-) : ComponentContext by componentContext, WelcomeComponent {
+) : WelcomeComponent(componentContext) {
 
-    private val mutableState = instanceKeeper.getOrCreateMutableState(WelcomeComponent.State())
+    @Composable
+    override fun models(events: Flow<Event>): State {
+        return WelcomePresenter(events) {
+            onFinished()
+        }
+    }
+}
 
-    override val state: Value<WelcomeComponent.State> = mutableState
+@Composable
+fun WelcomePresenter(
+    events: Flow<WelcomeComponent.Event>,
+    navigateBack: () -> (Unit),
+): WelcomeComponent.State {
+    var buttonText: String by remember { mutableStateOf("Welcome from Decompose and Molecule!") }
 
-    override fun onUpdateGreetingText() {
-        mutableState.update { it.copy(greetingText = "Welcome from ${getPlatformName()}") }
+    LaunchedEffect(Unit) {
+        events.collect { event ->
+            Napier.d { "Collected event: $event" }
+            when (event) {
+                WelcomeComponent.Event.BackClicked -> {
+                    navigateBack()
+                }
+
+                WelcomeComponent.Event.ButtonClicked -> {
+                    buttonText = "Welcome from ${getPlatformName()}"
+                }
+            }
+        }
     }
 
-    override fun onBackClicked() {
-        onFinished()
-    }
+    return WelcomeComponent.State(
+        greetingText = buttonText,
+    )
 }

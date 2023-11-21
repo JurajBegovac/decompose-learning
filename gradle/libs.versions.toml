@@ -24,6 +24,8 @@ napier = "2.6.1"
 
 ktlint = "11.6.1"
 
+molecule = "1.3.0"
+
 [plugins]
 
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -33,6 +35,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-jetbrains" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+molecule = { id = "app.cash.molecule", version.ref = "molecule" }
 
 [libraries]
 

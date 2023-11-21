@@ -1,16 +1,16 @@
 package com.example.myapplication.shared.welcome
 
-import com.arkivanov.decompose.value.Value
+import com.arkivanov.decompose.ComponentContext
+import com.example.myapplication.shared.MoleculeScreenComponent
 
-interface WelcomeComponent {
+abstract class WelcomeComponent(
+    componentContext: ComponentContext,
+) : MoleculeScreenComponent<WelcomeComponent.Event, WelcomeComponent.State>(componentContext) {
+    data class State(val greetingText: String)
 
-    val state: Value<State>
+    sealed interface Event {
+        data object ButtonClicked : Event
 
-    data class State(
-        val greetingText: String = "Welcome from Decompose!",
-    )
-
-    fun onUpdateGreetingText()
-
-    fun onBackClicked()
+        data object BackClicked : Event
+    }
 }

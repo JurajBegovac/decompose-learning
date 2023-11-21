@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.parcelize).apply(false)
     alias(libs.plugins.jetbrains.compose).apply(false)
     alias(libs.plugins.ktlint).apply(false)
+    alias(libs.plugins.molecule).apply(false)
 }
 
 tasks.register("clean", Delete::class) {

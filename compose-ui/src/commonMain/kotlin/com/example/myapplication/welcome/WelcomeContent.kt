@@ -12,25 +12,26 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.example.myapplication.shared.welcome.WelcomeComponent
+import io.github.aakira.napier.Napier
 
 @Composable
 internal fun WelcomeContent(
     component: WelcomeComponent,
     modifier: Modifier = Modifier,
 ) {
-    val state by component.state.subscribeAsState()
+    val state by component.models.collectAsState()
     Scaffold(
         modifier = modifier,
         topBar = {
             TopAppBar(
                 title = { Text(text = "Welcome Screen") },
                 navigationIcon = {
-                    IconButton(onClick = component::onBackClicked) {
+                    IconButton(onClick = { component.take(WelcomeComponent.Event.BackClicked) }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back button",
@@ -46,7 +47,10 @@ internal fun WelcomeContent(
             verticalArrangement = Arrangement.Center,
         ) {
             Button(
-                onClick = { component.onUpdateGreetingText() },
+                onClick = {
+                    Napier.d { "Button clicked" }
+                    component.take(WelcomeComponent.Event.UpdateGreetingText)
+                },
             ) {
                 Text(state.greetingText)
             }
