@@ -6,13 +6,13 @@ import com.example.myapplication.shared.main.MainComponent
 import com.example.myapplication.shared.welcome.WelcomeComponent
 
 interface RootComponent {
-
     val stack: Value<ChildStack<*, Child>>
 
     fun onBackClicked(toIndex: Int)
 
     sealed class Child {
         class Main(val component: MainComponent) : Child()
+
         class Welcome(val component: WelcomeComponent) : Child()
     }
 }

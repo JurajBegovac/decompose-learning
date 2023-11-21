@@ -19,7 +19,6 @@ import com.example.myapplication.shared.welcome.WelcomeComponent
 class DefaultRootComponent(
     componentContext: ComponentContext,
 ) : RootComponent, ComponentContext by componentContext {
-
     private val navigation = StackNavigation<Config>()
 
     override val stack: Value<ChildStack<*, Child>> =
@@ -30,7 +29,10 @@ class DefaultRootComponent(
             childFactory = ::child,
         )
 
-    private fun child(config: Config, childComponentContext: ComponentContext): Child =
+    private fun child(
+        config: Config,
+        childComponentContext: ComponentContext,
+    ): Child =
         when (config) {
             is Config.Main -> Child.Main(mainComponent(childComponentContext))
             is Config.Welcome -> Child.Welcome(welcomeComponent(childComponentContext))

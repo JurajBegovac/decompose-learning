@@ -26,7 +26,6 @@ import platform.UIKit.UIApplicationWillTerminateNotification
 class ApplicationLifecycle private constructor(
     private val lifecycle: LifecycleRegistry,
 ) : Lifecycle by lifecycle {
-
     constructor() : this(lifecycle = LifecycleRegistry())
 
     init {
@@ -38,7 +37,10 @@ class ApplicationLifecycle private constructor(
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun addObserver(name: NSNotificationName, selectorName: String) {
+    private fun addObserver(
+        name: NSNotificationName,
+        selectorName: String,
+    ) {
         NSNotificationCenter.defaultCenter.addObserver(
             name = name,
             `object` = null,

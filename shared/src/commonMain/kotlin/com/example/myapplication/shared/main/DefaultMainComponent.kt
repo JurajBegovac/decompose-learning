@@ -21,7 +21,6 @@ class DefaultMainComponent(
     private val someRepository: SomeRepository = getKoin().get(),
     private val onShowWelcome: () -> Unit,
 ) : MainComponent, ComponentContext by componentContext {
-
     private val _model = MutableValue(MainComponent.Model())
 
     override val model: Value<MainComponent.Model> = _model
@@ -29,14 +28,14 @@ class DefaultMainComponent(
     init {
         startCollecting(
             minState = Lifecycle.State.STARTED,
-            scopeProvider = mainScopeProvider
+            scopeProvider = mainScopeProvider,
         ) {
             someRepository.getValues()
                 .collect { result ->
                     _model.update {
                         it.copy(
                             buttonText = result.toString(),
-                            buttonEnabled = result > 5
+                            buttonEnabled = result > 5,
                         )
                     }
                 }

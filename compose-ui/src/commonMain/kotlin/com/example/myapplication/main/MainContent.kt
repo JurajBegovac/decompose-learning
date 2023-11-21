@@ -34,7 +34,7 @@ internal fun MainContent(
         ) {
             Button(
                 enabled = mainState.buttonEnabled,
-                onClick = component::onShowWelcomeClicked
+                onClick = component::onShowWelcomeClicked,
             ) {
                 Text(text = mainState.buttonText)
             }

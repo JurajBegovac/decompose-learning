@@ -11,7 +11,6 @@ class DefaultWelcomeComponent(
     private val componentContext: ComponentContext,
     private val onFinished: () -> Unit,
 ) : WelcomeComponent, ComponentContext by componentContext {
-
     // Consider preserving and managing the state via a store
     private val state = MutableValue(Model())
     override val model: Value<Model> = state

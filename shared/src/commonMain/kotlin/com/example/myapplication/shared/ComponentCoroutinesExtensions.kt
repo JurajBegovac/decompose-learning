@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 fun LifecycleOwner.coroutineScope(
     minState: Lifecycle.State = Lifecycle.State.CREATED,
-    scopeProvider: () -> CoroutineScope = { CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate) }
+    scopeProvider: () -> CoroutineScope = { CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate) },
 ): CoroutineScope {
     var scope = scopeProvider()
 
@@ -51,7 +51,7 @@ fun LifecycleOwner.coroutineScope(
         },
         onDestroy = {
             scope.cancel()
-        }
+        },
     )
 
     return scope
@@ -60,19 +60,19 @@ fun LifecycleOwner.coroutineScope(
 fun ComponentContext.startCollecting(
     minState: Lifecycle.State = Lifecycle.State.CREATED,
     scopeProvider: () -> CoroutineScope = { CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate) },
-    coroutineCollectionProvider: suspend CoroutineScope.() -> Unit
+    coroutineCollectionProvider: suspend CoroutineScope.() -> Unit,
 ) {
-
     fun startCollecting() {
         coroutineScope(minState, scopeProvider).launch { coroutineCollectionProvider(this) }
     }
 
     when (minState) {
-        Lifecycle.State.DESTROYED,
-        Lifecycle.State.INITIALIZED,
-        Lifecycle.State.CREATED -> startCollecting()
-
         Lifecycle.State.STARTED -> lifecycle.doOnStart { startCollecting() }
         Lifecycle.State.RESUMED -> lifecycle.doOnResume { startCollecting() }
+
+        Lifecycle.State.DESTROYED,
+        Lifecycle.State.INITIALIZED,
+        Lifecycle.State.CREATED,
+        -> startCollecting()
     }
 }
