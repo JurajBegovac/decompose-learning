@@ -61,7 +61,7 @@ fun LifecycleOwner.coroutineScope(
 }
 
 fun LifecycleOwner.collectWithLifecycle(
-    minActiveState: Lifecycle.State = Lifecycle.State.CREATED,
+    minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
     scopeProvider: () -> CoroutineScope = { CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate) },
     block: suspend CoroutineScope.() -> Unit,
 ) {
