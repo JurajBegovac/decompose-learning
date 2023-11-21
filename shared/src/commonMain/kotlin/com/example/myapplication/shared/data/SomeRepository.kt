@@ -11,7 +11,7 @@ interface SomeRepository {
 class SomeRepositoryImpl : SomeRepository {
     override fun getValues(): Flow<Int> =
         flow {
-            (1..10).forEach {
+            (1..5000).forEach {
                 emit(it)
                 delay(1000)
             }

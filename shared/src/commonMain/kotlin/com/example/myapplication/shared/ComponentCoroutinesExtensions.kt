@@ -1,5 +1,9 @@
 package com.example.myapplication.shared
 
+import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.instancekeeper.InstanceKeeper
+import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.arkivanov.essenty.lifecycle.LifecycleOwner
 import com.arkivanov.essenty.lifecycle.doOnResume
@@ -74,4 +78,31 @@ fun LifecycleOwner.collectWithLifecycle(
         Lifecycle.State.CREATED,
         -> launch()
     }
+}
+
+class CoroutineScopeHolder<State : Any>(
+    scopeProvider: () -> CoroutineScope = { CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate) },
+    initialValue: State,
+    block: suspend CoroutineScope.(MutableValue<State>) -> Unit
+) : InstanceKeeper.Instance {
+
+    private val mutableState: MutableValue<State> = MutableValue(initialValue)
+
+    val state: Value<State> get() = mutableState
+
+    val scope = scopeProvider().apply {
+        launch { block(this, mutableState) }
+    }
+
+    override fun onDestroy() {
+        scope.cancel()
+    }
+}
+
+fun <State : Any> InstanceKeeper.getOrCreateCoroutineScopeAndState(
+    initialValue: State,
+    scopeProvider: () -> CoroutineScope = { CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate) },
+    block: suspend CoroutineScope.(MutableValue<State>) -> Unit
+): Value<State> {
+    return getOrCreate { CoroutineScopeHolder(scopeProvider, initialValue, block) }.state
 }

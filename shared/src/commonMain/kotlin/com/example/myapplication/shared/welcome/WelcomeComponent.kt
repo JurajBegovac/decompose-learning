@@ -1,21 +1,16 @@
 package com.example.myapplication.shared.welcome
 
-import com.arkivanov.decompose.ComponentContext
-import com.example.myapplication.shared.BaseScreenComponent
+import com.arkivanov.decompose.value.Value
 
-abstract class WelcomeComponent(
-    componentContext: ComponentContext,
-    initialState: State,
-) : BaseScreenComponent<WelcomeComponent.State>(
-    componentContext,
-    initialState,
-) {
+interface WelcomeComponent {
+
+    val state: Value<State>
 
     data class State(
         val greetingText: String = "Welcome from Decompose!",
     )
 
-    abstract fun onUpdateGreetingText()
+    fun onUpdateGreetingText()
 
-    abstract fun onBackClicked()
+    fun onBackClicked()
 }

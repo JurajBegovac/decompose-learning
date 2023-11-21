@@ -1,15 +1,22 @@
 package com.example.myapplication.shared.welcome
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.Value
+import com.arkivanov.decompose.value.update
 import com.example.myapplication.shared.getPlatformName
 
 class DefaultWelcomeComponent(
     componentContext: ComponentContext,
     private val onFinished: () -> Unit,
-) : WelcomeComponent(componentContext, State()) {
+) : ComponentContext by componentContext, WelcomeComponent {
+
+    private val mutableState = MutableValue(WelcomeComponent.State())
+
+    override val state: Value<WelcomeComponent.State> = mutableState
 
     override fun onUpdateGreetingText() {
-        updateStateBasic { it.copy(greetingText = "Welcome from ${getPlatformName()}") }
+        mutableState.update { it.copy(greetingText = "Welcome from ${getPlatformName()}") }
     }
 
     override fun onBackClicked() {

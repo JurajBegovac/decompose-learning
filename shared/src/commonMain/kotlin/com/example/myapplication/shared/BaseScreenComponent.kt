@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlin.coroutines.CoroutineContext
 
+// For now don't use it until I learn more about the decompose lib (e.g. state & instance retaining)
 abstract class BaseScreenComponent<State : Any>(
     componentContext: ComponentContext,
     initialState: State,

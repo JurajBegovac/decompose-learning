@@ -1,21 +1,35 @@
 package com.example.myapplication.shared.main
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.value.Value
+import com.arkivanov.decompose.value.update
+import com.example.myapplication.shared.collectWithLifecycle
 import com.example.myapplication.shared.data.SomeRepository
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.mp.KoinPlatform.getKoin
 
 class DefaultMainComponent(
     componentContext: ComponentContext,
     someRepository: SomeRepository = getKoin().get(),
     private val onShowWelcome: () -> Unit,
-) : MainComponent(componentContext = componentContext, initialState = State()) {
+) : ComponentContext by componentContext, MainComponent {
+
+    private val mutableState = MutableValue(MainComponent.State())
+
+    override val state: Value<MainComponent.State> = mutableState
 
     init {
-        updateState(dataFlow = someRepository.getValues()) { state, data ->
-            state.copy(
-                buttonText = data.toString(),
-                buttonEnabled = data > 5,
-            )
+        collectWithLifecycle {
+            someRepository.getValues()
+                .collectLatest { data ->
+                    mutableState.update { state ->
+                        state.copy(
+                            buttonText = data.toString(),
+                            buttonEnabled = data > 1,
+                        )
+                    }
+                }
         }
     }
 
