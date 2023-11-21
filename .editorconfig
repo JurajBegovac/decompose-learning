@@ -25,4 +25,5 @@ ij_editorconfig_space_before_comma = false
 ij_editorconfig_spaces_around_assignment_operators = true
 
 [{*.kt,*.kts}]
+ktlint_standard_no-empty-first-line-in-class-body = disabled
 ktlint_function_naming_ignore_when_annotated_with = Composable

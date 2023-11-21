@@ -1,6 +1,5 @@
 package com.example.myapplication.shared
 
-import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.arkivanov.essenty.lifecycle.LifecycleOwner
 import com.arkivanov.essenty.lifecycle.doOnResume
@@ -14,7 +13,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 fun LifecycleOwner.coroutineScope(
-    minState: Lifecycle.State = Lifecycle.State.CREATED,
+    minActiveState: Lifecycle.State = Lifecycle.State.CREATED,
     scopeProvider: () -> CoroutineScope = { CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate) },
 ): CoroutineScope {
     var scope = scopeProvider()
@@ -25,27 +24,27 @@ fun LifecycleOwner.coroutineScope(
 
     lifecycle.subscribe(
         onCreate = {
-            if (minState == Lifecycle.State.CREATED && scope.isActive.not()) {
+            if (minActiveState == Lifecycle.State.CREATED && scope.isActive.not()) {
                 scope = scopeProvider()
             }
         },
         onStart = {
-            if (minState == Lifecycle.State.STARTED && scope.isActive.not()) {
+            if (minActiveState == Lifecycle.State.STARTED && scope.isActive.not()) {
                 scope = scopeProvider()
             }
         },
         onResume = {
-            if (minState == Lifecycle.State.RESUMED && scope.isActive.not()) {
+            if (minActiveState == Lifecycle.State.RESUMED && scope.isActive.not()) {
                 scope = scopeProvider()
             }
         },
         onPause = {
-            if (minState >= Lifecycle.State.RESUMED) {
+            if (minActiveState >= Lifecycle.State.RESUMED) {
                 scope.cancel()
             }
         },
         onStop = {
-            if (minState >= Lifecycle.State.STARTED) {
+            if (minActiveState >= Lifecycle.State.STARTED) {
                 scope.cancel()
             }
         },
@@ -57,22 +56,22 @@ fun LifecycleOwner.coroutineScope(
     return scope
 }
 
-fun ComponentContext.startCollecting(
-    minState: Lifecycle.State = Lifecycle.State.CREATED,
+fun LifecycleOwner.collectWithLifecycle(
+    minActiveState: Lifecycle.State = Lifecycle.State.CREATED,
     scopeProvider: () -> CoroutineScope = { CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate) },
-    coroutineCollectionProvider: suspend CoroutineScope.() -> Unit,
+    block: suspend CoroutineScope.() -> Unit,
 ) {
-    fun startCollecting() {
-        coroutineScope(minState, scopeProvider).launch { coroutineCollectionProvider(this) }
+    fun launch() {
+        coroutineScope(minActiveState, scopeProvider).launch { block(this) }
     }
 
-    when (minState) {
-        Lifecycle.State.STARTED -> lifecycle.doOnStart { startCollecting() }
-        Lifecycle.State.RESUMED -> lifecycle.doOnResume { startCollecting() }
+    when (minActiveState) {
+        Lifecycle.State.STARTED -> lifecycle.doOnStart { launch() }
+        Lifecycle.State.RESUMED -> lifecycle.doOnResume { launch() }
 
         Lifecycle.State.DESTROYED,
         Lifecycle.State.INITIALIZED,
         Lifecycle.State.CREATED,
-        -> startCollecting()
+        -> launch()
     }
 }
