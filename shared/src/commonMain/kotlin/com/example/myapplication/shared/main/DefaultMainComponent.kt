@@ -25,8 +25,8 @@ class DefaultMainComponent(
                 .collectLatest { data ->
                     mutableState.update { state ->
                         state.copy(
-                            buttonText = data.toString(),
-                            buttonEnabled = data > 1,
+                            buttonText = "Button text: $data",
+                            buttonEnabled = data > 3,
                         )
                     }
                 }

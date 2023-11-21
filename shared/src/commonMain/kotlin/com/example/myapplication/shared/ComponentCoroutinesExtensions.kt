@@ -83,16 +83,17 @@ fun LifecycleOwner.collectWithLifecycle(
 class CoroutineScopeHolder<State : Any>(
     scopeProvider: () -> CoroutineScope = { CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate) },
     initialValue: State,
-    block: suspend CoroutineScope.(MutableValue<State>) -> Unit
+    block: suspend CoroutineScope.(MutableValue<State>) -> Unit,
 ) : InstanceKeeper.Instance {
 
     private val mutableState: MutableValue<State> = MutableValue(initialValue)
 
     val state: Value<State> get() = mutableState
 
-    val scope = scopeProvider().apply {
-        launch { block(this, mutableState) }
-    }
+    val scope =
+        scopeProvider().apply {
+            launch { block(this, mutableState) }
+        }
 
     override fun onDestroy() {
         scope.cancel()
@@ -102,7 +103,7 @@ class CoroutineScopeHolder<State : Any>(
 fun <State : Any> InstanceKeeper.getOrCreateCoroutineScopeAndState(
     initialValue: State,
     scopeProvider: () -> CoroutineScope = { CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate) },
-    block: suspend CoroutineScope.(MutableValue<State>) -> Unit
+    block: suspend CoroutineScope.(MutableValue<State>) -> Unit,
 ): Value<State> {
     return getOrCreate { CoroutineScopeHolder(scopeProvider, initialValue, block) }.state
 }
