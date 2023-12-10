@@ -12,18 +12,22 @@ struct RootView: View {
         StackView(
             stackValue: StateValue(root.stack),
             getTitle: {
-                switch $0 {
-                case is RootComponentChild.Main: return "Decompose Template"
-                case is RootComponentChild.Welcome: return "Welcome Screen"
-                default: return ""
+                let rootComponentChild = $0 as RootComponentChild
+                switch onEnum(of: rootComponentChild) {
+                case .main(_):
+                    return "Decompose Template"
+                case .welcome(_):
+                    return "Welcome Screen"
                 }
             },
             onBack: root.onBackClicked
         ) {
-            switch $0 {
-            case let child as RootComponentChild.Main: MainView(child.component)
-            case let child as RootComponentChild.Welcome: WelcomeView(child.component)
-            default: EmptyView()
+            let rootComponentChild = $0 as RootComponentChild
+            switch onEnum(of: rootComponentChild) {
+            case .main(let child):
+                MainView(child.component)
+            case .welcome(let child):
+                WelcomeView(child.component)
             }
         }
     }
